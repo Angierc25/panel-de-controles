@@ -1,6 +1,6 @@
 import  { createContext, useState, useEffect, ReactNode, FC } from 'react';
 import Cookies from 'js-cookie';
-import { login as loginService, getUser as getUserService } from '../../api/auth/authapi';
+import { login as loginService, getUser as getUserService, UserByID } from '../../api/auth/authapi';
 
 interface User {
   id: number;
@@ -12,6 +12,7 @@ export interface AuthContextType {
   user: User[] | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  fetchUserByID: (userID: number) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,6 +40,20 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
 
+  const fetchUserByID = async (userID: number) => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      try {
+        const user = await UserByID(token, userID);
+        console.log('User fetched by ID:', user);
+        // Aquí puedes hacer lo que necesites con el usuario obtenido
+      } catch (error) {
+        console.error('Error fetching user by ID:', error);
+      }
+    }
+  };
+  
+
     const fetchUser = async () => {
       const token = Cookies.get('authToken');
       if (token) {
@@ -58,7 +73,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, fetchUserByID}}>
       {children}
     </AuthContext.Provider>
   );

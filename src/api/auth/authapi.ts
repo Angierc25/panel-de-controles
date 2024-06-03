@@ -14,3 +14,13 @@ export const getUser = async (token: string) => {
   });
   return response.data;
 };
+
+export const UserByID = async (token: string, userID: number) => {
+  const response = await apiClient.get(`/pos/${userID}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+

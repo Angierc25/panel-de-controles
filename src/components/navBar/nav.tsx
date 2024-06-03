@@ -79,7 +79,7 @@ const Nav: FC = () => {
       <nav className="p-6">
         <ul className="space-y-4">
           <li>
-            <Link to="/dashboard" className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-700 hover:text-white">
+            <Link to="/panelcontrol" className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-700 hover:text-white">
               <LayoutDashboardIcon className="h-5 w-5" />
               Dashboard
             </Link>
