@@ -1,7 +1,7 @@
-// src/views/control/PosList.tsx
-
 import React from 'react';
 import useAuth from '../../hooks/useAuth';
+import Dashboard from './dashboards/dashboard';
+import Table from './tablasUser/tableuser';
 
 const PosList: React.FC = () => {
   const { logout } = useAuth();
@@ -11,11 +11,12 @@ const PosList: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Panel de Control</h1>
+    <>
+      <Dashboard />
+      <Table/>
       <button onClick={handleLogout}>Cerrar Sesión</button>
-      {/* Aquí puedes agregar el resto del contenido del panel de control */}
-    </div>
+
+    </>
   );
 };
 

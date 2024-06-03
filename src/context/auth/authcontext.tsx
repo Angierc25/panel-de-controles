@@ -4,11 +4,12 @@ import { login as loginService, getUser as getUserService } from '../../api/auth
 
 interface User {
   id: number;
-  name: string;
+  nombre: string;
+  propietario: string;
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: User[] | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -20,7 +21,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User[] | null>(null); // Cambiado el tipo de user a User[] | null
 
   const login = async (email: string, password: string) => {
     const data = await loginService(email, password);
@@ -33,18 +34,18 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     Cookies.remove('authToken');
-    setUser(null);
+    setUser(null); // Cambiado el valor a null cuando se hace logout
     console.log('Logged out, token removed');
   };
 
-  useEffect(() => {
+
     const fetchUser = async () => {
       const token = Cookies.get('authToken');
       if (token) {
         try {
-          const userData = await getUserService(token);
-          console.log('User fetched:', userData);
-          setUser(userData);
+          const user = await getUserService(token);
+          console.log('User fetched:', user);
+          setUser(user);
         } catch (error) {
           console.error('Error fetching user:', error);
           Cookies.remove('authToken');
@@ -52,8 +53,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    fetchUser();
-  }, []);
+    useEffect(() => {
+      fetchUser();
+    }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
@@ -61,4 +63,3 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
