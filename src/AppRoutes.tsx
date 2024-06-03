@@ -1,11 +1,18 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import useAuth from './hooks/useAuth'; // Importar useAuth de la ubicación correcta
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import useAuth from './hooks/useAuth';
 import PosList from './views/control/posList';
 import Login from './views/login/login.access';
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/panelcontrol', { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
     <Routes>
