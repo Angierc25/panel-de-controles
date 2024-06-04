@@ -43,7 +43,8 @@ const Settings: React.FC = () => {
                         </div>
                         <div className="flex items-center justify-center">
                             <button
-                                className="rounded-lg bg-white p-3 border border-gray-400 dark:text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition duration-200">
+                                className="rounded-lg bg-white p-3 border border-gray-400 dark:text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition duration-200"
+                                onClick={() => navigate('/config')}>
                                 Ir a configuración
                             </button>
                         </div>
