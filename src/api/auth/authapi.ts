@@ -24,3 +24,11 @@ export const UserByID = async (token: string, userID: number) => {
   return response.data;
 }
 
+export const deleteUser = async (token: string, userID: number) =>{
+  const response = await apiClient.delete(`/pos/${userID}`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}

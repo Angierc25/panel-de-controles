@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import useAuth from './hooks/useAuth';
 import PosList from './views/control/posList';
 import Login from './views/login/login.access';
-import Dashboard from './views/control/dashboards/dashboard';
+import Settings from './views/settings/settings.user';
+import Profile from './views/settings/profile';
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -17,7 +18,8 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/panelcontrol" element={user ? <PosList /> : <Navigate to="/" replace />} />
-      <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" replace />} />
+      <Route path="/settings" element={user ? <Settings /> : <Navigate to="/" replace />} />
+      <Route path="/profile" element={user ? <Profile /> : <Navigate to="/" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
+import { FaUser, FaLock } from 'react-icons/fa';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -32,52 +33,49 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-      <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          Ingresa a tu cuenta
-        </h1>
-        <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="name@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          >
-            Ingresar
-          </button>
-        </form>
+    
+    <div className="flex flex-col justify-center items-center  bg-white rounded-lg shadow-lg p-8 md:p-20">
+    <h1 className="text-4xl font-bold text-center text-gray-600 mb-8 md:mb-12">Iniciar Sesion</h1>
+    <p className="text-gray-500 dark:text-gray-400 text-center md:text-left">Ingresa tus credenciales para acceder a tu cuenta.</p>
+    <br />
+    <form onSubmit={handleSubmit} className="w-full flex flex-col space-y-4 md:space-y-6">
+      <div className="relative flex items-center border rounded-lg overflow-hidden md:w-full">
+        <div className="px-4 py-3 bg-gray-100">
+          <FaUser className="text-gray-500" />
+        </div>
+        <input
+          type="email"
+          id="email"
+          className="w-full px-4 py-3 text-gray-900 focus:outline-none placeholder:text-gray-500"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
-    </div>
-  );
+      <div className="relative flex items-center border rounded-lg overflow-hidden md:w-full">
+        <div className="px-4 py-3 bg-gray-100">
+          <FaLock className="text-gray-500" />
+        </div>
+        <input
+          type="password"
+          id="password"
+          className="w-full px-4 py-3 text-gray-900 focus:outline-none placeholder:text-gray-500"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition duration-200"
+      >
+        Iniciar Sesion
+      </button>
+    </form>
+  </div>
+);
 };
 
 export default LoginForm;

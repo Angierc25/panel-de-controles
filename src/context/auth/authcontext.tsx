@@ -1,6 +1,6 @@
 import  { createContext, useState, useEffect, ReactNode, FC } from 'react';
 import Cookies from 'js-cookie';
-import { login as loginService, getUser as getUserService, UserByID } from '../../api/auth/authapi';
+import { login as loginService, getUser as getUserService, UserByID, deleteUser as deleteUserService} from '../../api/auth/authapi';
 
 interface User {
   id: number;
@@ -13,6 +13,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   fetchUserByID: (userID: number) => Promise<void>;
+  deleteUserById: (userID: number) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +37,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     Cookies.remove('authToken');
     setUser(null); // Cambiado el valor a null cuando se hace logout
-    console.log('Logged out, token removed');
   };
 
 
@@ -53,6 +53,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
   
+  const deleteUserById = async (userID: number) => {
+    const token = Cookies.get('authToken');
+    if (!token) {
+      console.error('No token found');
+      return Promise.reject('No token found');
+    }
+
+    try {
+      await deleteUserService(token, userID);
+      setUser((prevUser) => prevUser?.filter((user) => user.id !== userID) || null);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error;
+    }
+  };
 
     const fetchUser = async () => {
       const token = Cookies.get('authToken');
@@ -73,7 +88,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, fetchUserByID}}>
+    <AuthContext.Provider value={{ user, login, logout, fetchUserByID, deleteUserById}}>
       {children}
     </AuthContext.Provider>
   );
