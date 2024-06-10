@@ -2,10 +2,13 @@ import { createContext, useState, useEffect, ReactNode, FC } from 'react';
 import Cookies from 'js-cookie';
 import {
   login as loginService,
+  logout as logoutService,
   getUser as getUserService,
   UserByID,
   deleteUser as deleteUserService,
   getAuth as getAuthService,
+  editAuth as editAuthService,
+  changePassword as changePasswordService
 } from '../../api/auth/authapi';
 
 interface Auth {
@@ -14,6 +17,7 @@ interface Auth {
   email: string;
   telefono: string;
   pais: string;
+  token: string;
 }
 
 interface User {
@@ -27,9 +31,11 @@ export interface AuthContextType {
   auth: Auth | null;
   authID: number | null; // Agregamos authID al contexto
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   fetchUserByID: (userID: number) => Promise<void>;
   deleteUserById: (userID: number) => Promise<void>;
+  editAuthByID: (updatedData: any) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,23 +49,36 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User[] | null>(null);
   const [authID, setAuthID] = useState<number | null>(null);
 
+
+  
   const login = async (email: string, password: string) => {
-    const data = await loginService(email, password);
-    Cookies.set('authToken', data.token, { expires: 7 });
-    console.log('Token saved:', Cookies.get('authToken'));
-    const userData = await getUserService(data.token);
-    console.log('User data fetched after login:', userData);
-    setUser(userData);
-    if (userData && userData.length > 0) {
-      setAuthID(userData[0].id);
+    try {
+      const data = await loginService(email, password);
+      Cookies.set('authToken', data.token, { expires: 7 });
+      console.log('Token saved:', Cookies.get('authToken'));
+
+      // Aquí obtenemos el authID del data.usuario_id y lo establecemos en el estado
+      setAuthID(data.usuario_id);
+
+      // Fetch user data if necessary
+      const userData = await getUserService(data.token);
+      console.log('User data fetched after login:', userData);
+      setUser(userData);
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
     }
   };
 
-  const logout = () => {
-    Cookies.remove('authToken');
-    setUser(null);
-    setAuth(null);
-    setAuthID(null); // Asegúrate de establecer authID en null al hacer logout
+  const logout = async () => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      await logoutService(token);
+      Cookies.remove('authToken');
+      setUser(null);
+      setAuth(null);
+      setAuthID(null);
+    }
   };
 
   const fetchAuth = async (authID: number) => {
@@ -82,6 +101,55 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [authID]);
 
+  useEffect(() => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      const storedAuthID = Cookies.get('authID'); // Almacena authID en cookies
+      if (storedAuthID) {
+        setAuthID(Number(storedAuthID));
+        fetchAuth(Number(storedAuthID));
+        fetchUser();
+      }
+    }
+  }, []);
+
+  // Almacenar authID en cookies o cuando cambia
+  useEffect(() => {
+    if (authID !== null) {
+      Cookies.set('authID', authID.toString());
+      fetchAuth(authID);
+    } else {
+      Cookies.remove('authID');
+    }
+  }, [authID]);
+
+  const editAuthByID = async (updatedData: any) => {
+    const token = Cookies.get('authToken');
+    if (token && authID !== null) {
+      try {
+        const updatedAuth = await editAuthService(token, authID, updatedData);
+        console.log('Auth updated:', updatedAuth);
+        setAuth(updatedAuth); // Actualizar el estado con los datos modificados
+      } catch (error) {
+        console.error('Error updating auth:', error);
+      }
+    }
+  };
+
+  const changePassword = async (currentPassword: string, newPassword: string, confirmPassword: string) => {
+    const token = Cookies.get('authToken');
+    if (token && authID !== null) {
+      try {
+        await changePasswordService(token, authID, currentPassword, newPassword, confirmPassword);
+        console.log('Password changed successfully');
+      } catch (error) {
+        console.error('Error changing password:', error);
+      }
+    }
+  };
+
+  //
+  //todas las funciones de aqui van para los usuarios que estan en la app.
   const fetchUserByID = async (userID: number) => {
     const token = Cookies.get('authToken');
     if (token) {
@@ -94,7 +162,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
     }
   };
-  
+
   const deleteUserById = async (userID: number) => {
     const token = Cookies.get('authToken');
     if (!token) {
@@ -130,7 +198,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authID, auth, user, login, logout, fetchUserByID, deleteUserById }}>
+    <AuthContext.Provider value={{ authID, auth, user, login, logout, fetchUserByID, deleteUserById, editAuthByID, changePassword }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,6 +7,15 @@ export const login = async (email: string, password: string) => {
   return response.data;
 };
 
+export const logout = async (token: string) => {
+  const response = await apiClient.post('/logout', {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export const getAuth = async (token: string, authID: number) => {
   const response = await apiClient.get(`/usuario/${authID}`,{
     headers: {
@@ -15,6 +24,35 @@ export const getAuth = async (token: string, authID: number) => {
   });
    return response.data;
 }
+
+export const editAuth = async (token: string, authID: number, updatedData: any) => {
+  const response = await apiClient.put(`/editar/${authID}`, updatedData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const changePassword = async (token: string, userId: number, currentPassword: string, newPassword: string, confirmPassword: string) => {
+  try {
+    const response = await apiClient.put(`/usuario/${userId}/cambiarPass`, {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //todas las funciones de aqui van para los usuarios que estan en la app.
 //traer a los usuarios registrados en la app
 export const getUser = async (token: string) => {

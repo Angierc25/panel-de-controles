@@ -9,9 +9,18 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState<string>('');
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError('');
+    
+    if (!email || !password) {
+      setError('Por favor ingresa tu correo electrónico y contraseña.');
+      return;
+    }
+  
     try {
       await login(email, password);
       Swal.fire({
@@ -23,12 +32,7 @@ const LoginForm: React.FC = () => {
       });
       navigate('/panelcontrol', { replace: true });
     } catch (error) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Usuario o contraseña incorrectos.',
-        icon: 'error',
-        confirmButtonText: 'Ok',
-      });
+      setError('Usuario o contraseña incorrectos.');
     }
   };
 
