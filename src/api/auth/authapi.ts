@@ -34,12 +34,12 @@ export const editAuth = async (token: string, authID: number, updatedData: any) 
   return response.data;
 };
 
-export const changePassword = async (token: string, userId: number, currentPassword: string, newPassword: string, confirmPassword: string) => {
+export const changePassword = async (token: string, userId: number, contraseñaActual: string, nuevaContraseña: string, verificarContraseña: string) => {
   try {
     const response = await apiClient.put(`/usuario/${userId}/cambiarPass`, {
-      currentPassword,
-      newPassword,
-      confirmPassword,
+      contraseñaActual,
+      nuevaContraseña,
+      verificarContraseña,
     }, {
       headers: {
         Authorization: `Bearer ${token}`,

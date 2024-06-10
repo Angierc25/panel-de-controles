@@ -21,17 +21,18 @@ const Password: React.FC = () => {
     }
 
     try {
-      await changePassword(currentPassword, newPassword, confirmNewPassword);
-      Swal.fire({
-        title: '¡Cambio de contraseña exitoso!',
-        text: 'Tu contraseña ha sido cambiada.',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmNewPassword('');
+      console.log('Changing password with:', { currentPassword, newPassword, confirmNewPassword });
+    await changePassword(currentPassword, newPassword, confirmNewPassword);
+    Swal.fire({
+      title: '¡Cambio de contraseña exitoso!',
+      text: 'Tu contraseña ha sido cambiada.',
+      icon: 'success',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
     } catch (error) {
       Swal.fire({
         title: 'Error',

@@ -140,8 +140,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const token = Cookies.get('authToken');
     if (token && authID !== null) {
       try {
-        await changePasswordService(token, authID, currentPassword, newPassword, confirmPassword);
-        console.log('Password changed successfully');
+        const response = await changePasswordService(token, authID, currentPassword, newPassword, confirmPassword);
+      console.log('Password changed successfully');
+      return response; 
       } catch (error) {
         console.error('Error changing password:', error);
       }
