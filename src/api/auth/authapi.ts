@@ -1,12 +1,23 @@
 import apiClient from "../config/apiclient";
 
-//funciones de administrador
-// Login function (existing)
+// Funciones de administrador
+
+/**
+ * Función para iniciar sesión
+ * @param email - El email del usuario
+ * @param password - La contraseña del usuario
+ * @returns Los datos del usuario autenticado
+ */
 export const login = async (email: string, password: string) => {
   const response = await apiClient.post('/login', { email, password });
   return response.data;
 };
 
+/**
+ * Función para cerrar sesión
+ * @param token - El token de autenticación
+ * @returns Los datos de la respuesta de logout
+ */
 export const logout = async (token: string) => {
   const response = await apiClient.post('/logout', {}, {
     headers: {
@@ -16,15 +27,28 @@ export const logout = async (token: string) => {
   return response.data;
 };
 
+/**
+ * Obtener datos de autenticación
+ * @param token - El token de autenticación
+ * @param authID - El ID del usuario autenticado
+ * @returns Los datos del usuario autenticado
+ */
 export const getAuth = async (token: string, authID: number) => {
-  const response = await apiClient.get(`/usuario/${authID}`,{
+  const response = await apiClient.get(`/usuario/${authID}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-   return response.data;
-}
+  return response.data;
+};
 
+/**
+ * Editar datos de autenticación
+ * @param token - El token de autenticación
+ * @param authID - El ID del usuario autenticado
+ * @param updatedData - Los datos actualizados del usuario
+ * @returns Los datos actualizados del usuario
+ */
 export const editAuth = async (token: string, authID: number, updatedData: any) => {
   const response = await apiClient.put(`/editar/${authID}`, updatedData, {
     headers: {
@@ -34,6 +58,15 @@ export const editAuth = async (token: string, authID: number, updatedData: any) 
   return response.data;
 };
 
+/**
+ * Cambiar la contraseña del usuario
+ * @param token - El token de autenticación
+ * @param userId - El ID del usuario
+ * @param contraseñaActual - La contraseña actual del usuario
+ * @param nuevaContraseña - La nueva contraseña del usuario
+ * @param verificarContraseña - La verificación de la nueva contraseña
+ * @returns La respuesta de cambio de contraseña
+ */
 export const changePassword = async (token: string, userId: number, contraseñaActual: string, nuevaContraseña: string, verificarContraseña: string) => {
   try {
     const response = await apiClient.put(`/usuario/${userId}/cambiarPass`, {
@@ -53,8 +86,13 @@ export const changePassword = async (token: string, userId: number, contraseñaA
   }
 };
 
-//todas las funciones de aqui van para los usuarios que estan en la app.
-//traer a los usuarios registrados en la app
+// Funciones para los usuarios que están en la aplicación
+
+/**
+ * Obtener usuarios registrados en la aplicación
+ * @param token - El token de autenticación
+ * @returns La lista de usuarios registrados
+ */
 export const getUser = async (token: string) => {
   const response = await apiClient.get('/pos', {
     headers: {
@@ -64,6 +102,12 @@ export const getUser = async (token: string) => {
   return response.data;
 };
 
+/**
+ * Obtener usuario por ID
+ * @param token - El token de autenticación
+ * @param userID - El ID del usuario
+ * @returns Los datos del usuario
+ */
 export const UserByID = async (token: string, userID: number) => {
   const response = await apiClient.get(`/pos/${userID}`, {
     headers: {
@@ -71,17 +115,29 @@ export const UserByID = async (token: string, userID: number) => {
     },
   });
   return response.data;
-}
+};
 
-export const deleteUser = async (token: string, userID: number) =>{
-  const response = await apiClient.delete(`/pos/${userID}`,{
+/**
+ * Eliminar usuario por ID
+ * @param token - El token de autenticación
+ * @param userID - El ID del usuario a eliminar
+ * @returns La respuesta de la eliminación del usuario
+ */
+export const deleteUser = async (token: string, userID: number) => {
+  const response = await apiClient.delete(`/pos/${userID}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
-}
+};
 
+/**
+ * Alternar el estado del usuario (activar/desactivar)
+ * @param token - El token de autenticación
+ * @param userID - El ID del usuario
+ * @returns La respuesta de la operación
+ */
 export const toggleUserStatus = async (token: string, userID: number) => {
   const response = await apiClient.put(`/pos/${userID}`, {}, {
     headers: {
@@ -89,8 +145,13 @@ export const toggleUserStatus = async (token: string, userID: number) => {
     },
   });
   return response.data;
-}
+};
 
+/**
+ * Obtener usuarios suspendidos
+ * @param token - El token de autenticación
+ * @returns La lista de usuarios suspendidos
+ */
 export const getUserCero = async (token: string) => {
   const response = await apiClient.get('/deleted/pos', {
     headers: {
