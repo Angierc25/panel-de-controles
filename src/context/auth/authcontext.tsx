@@ -4,11 +4,13 @@ import {
   login as loginService,
   logout as logoutService,
   getUser as getUserService,
+  getUserCero as getUserCeroService,
   UserByID,
   deleteUser as deleteUserService,
   getAuth as getAuthService,
   editAuth as editAuthService,
-  changePassword as changePasswordService
+  changePassword as changePasswordService,
+  toggleUserStatus as toggleUserStatusService
 } from '../../api/auth/authapi';
 
 interface Auth {
@@ -24,10 +26,14 @@ interface User {
   id: number;
   nombre: string;
   propietario: string;
+  estado: boolean;
 }
+
+interface UserCero extends User {}
 
 export interface AuthContextType {
   user: User[] | null;
+  userCero: UserCero[] | null;
   auth: Auth | null;
   authID: number | null; // Agregamos authID al contexto
   login: (email: string, password: string) => Promise<void>;
@@ -35,6 +41,7 @@ export interface AuthContextType {
   fetchUserByID: (userID: number) => Promise<void>;
   deleteUserById: (userID: number) => Promise<void>;
   editAuthByID: (updatedData: any) => Promise<void>;
+  toggleUserStatusById: (userID: number) => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<void>;
 }
 
@@ -47,6 +54,7 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth | null>(null);
   const [user, setUser] = useState<User[] | null>(null);
+  const [userCero, setUserCero] = useState<UserCero[]|null>(null);
   const [authID, setAuthID] = useState<number | null>(null);
 
 
@@ -148,7 +156,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       }
     }
   };
-
+  //
   //
   //todas las funciones de aqui van para los usuarios que estan en la app.
   const fetchUserByID = async (userID: number) => {
@@ -157,7 +165,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       try {
         const user = await UserByID(token, userID);
         console.log('User fetched by ID:', user);
-        // Aquí puedes hacer lo que necesites con el usuario obtenido
       } catch (error) {
         console.error('Error fetching user by ID:', error);
       }
@@ -198,8 +205,43 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     fetchUser();
   }, []);
 
+  const fetchUserCero = async () => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      try {
+        const userCero = await getUserCeroService(token);
+        console.log('User fetched:', userCero);
+        setUserCero(userCero);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        Cookies.remove('authToken');
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUserCero();
+  }, []);
+
+  const toggleUserStatusById = async (userID: number) => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      try {
+        await toggleUserStatusService(token, userID);
+        // Actualizar el estado del usuario localmente
+        setUserCero(prevUser =>
+          prevUser?.map(userCero =>
+            userCero.id === userID ? { ...userCero, estado: !userCero.estado } : userCero
+          ) || null
+        );
+      } catch (error) {
+        console.error('Error toggling user status:', error);
+      }
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ authID, auth, user, login, logout, fetchUserByID, deleteUserById, editAuthByID, changePassword }}>
+    <AuthContext.Provider value={{ authID, auth, user, userCero, login, logout, fetchUserByID, deleteUserById, editAuthByID, changePassword, toggleUserStatusById }}>
       {children}
     </AuthContext.Provider>
   );

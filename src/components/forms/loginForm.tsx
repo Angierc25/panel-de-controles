@@ -33,6 +33,12 @@ const LoginForm: React.FC = () => {
       navigate('/panelcontrol', { replace: true });
     } catch (error) {
       setError('Usuario o contraseña incorrectos.');
+      Swal.fire({
+        title: 'Error al iniciar sesion',
+        text: 'Usuario o contraseña incorrectos.',
+        icon: 'error',
+        confirmButtonText: 'Ok',
+      });
     }
   };
 

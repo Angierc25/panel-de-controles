@@ -81,3 +81,21 @@ export const deleteUser = async (token: string, userID: number) =>{
   });
   return response.data;
 }
+
+export const toggleUserStatus = async (token: string, userID: number) => {
+  const response = await apiClient.put(`/pos/${userID}`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export const getUserCero = async (token: string) => {
+  const response = await apiClient.get('/deleted/pos', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
