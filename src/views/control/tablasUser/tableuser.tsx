@@ -15,36 +15,58 @@ const Table: React.FC = () => {
     const handleSearchUserCero = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTermUserCero(event.target.value);
     };
+
     const handleActivate = async (userID: number) => {
-        try {
-          await toggleUserStatusById(userID);
-          console.log('User status toggled successfully');
-          
-          // Agregar el usuario activado a la lista de usuarios
-          const activatedUser = userCero?.find((u) => u.id === userID);
-          if (activatedUser) {
-            setUserCero((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
-            setUser((prevUsers) => [...(prevUsers || []), { ...activatedUser, estado: true }]);
-          }
-        } catch (error) {
-          console.error('Error toggling user status:', error);
-        }
-      };
-    
-      const handleDelete = async (userID: number) => {
-        try {
-          await deleteUserById(userID);
-          // Remove user from user array and add it to userCero array
-          const deletedUser = user?.find((u) => u.id === userID);
-          if (deletedUser) {
-            setUser((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
-            setUserCero((prevUsers) => [...(prevUsers || []), { ...deletedUser, estado: false }]);
-          }
-          console.log('User deleted successfully');
-        } catch (error) {
-          console.error('Error deleting user:', error);
-        }
-      };
+    try {
+      await toggleUserStatusById(userID);
+      const activatedUser = userCero?.find((u) => u.id === userID);
+      if (activatedUser) {
+        setUserCero((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
+        setUser((prevUsers) => [...(prevUsers || []), { ...activatedUser, estado: true }]);
+      }
+      console.log('User activated successfully');
+      Swal.fire({
+        title: 'Usuario activado',
+        text: 'El usuario ha sido activado exitosamente.',
+        icon: 'success',
+        timer: 1500,
+        timerProgressBar: true,
+      });
+    } catch (error) {
+      console.error('Error toggling user status:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al activar el usuario.',
+        icon: 'error',
+      });
+    }
+  };
+
+  const handleDelete = async (userID: number) => {
+    try {
+      await deleteUserById(userID);
+      const deletedUser = user?.find((u) => u.id === userID);
+      if (deletedUser) {
+        setUser((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
+        setUserCero((prevUsers) => [...(prevUsers || []), { ...deletedUser, estado: false }]);
+      }
+      console.log('User deleted successfully');
+      Swal.fire({
+        title: 'Usuario eliminado',
+        text: 'El usuario ha sido eliminado exitosamente.',
+        icon: 'success',
+        timer: 1500,
+        timerProgressBar: true,
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al eliminar el usuario.',
+        icon: 'error',
+      });
+    }
+  };
     return (
         <div>
         <div className="mb-8 rounded-lg bg-white p-6 shadow overflow-x-auto" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
