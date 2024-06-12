@@ -4,41 +4,47 @@ import Swal from 'sweetalert2';
 import { Delete, CheckCircle } from '@mui/icons-material';
 
 const Table: React.FC = () => {
-    const { user, userCero, deleteUserById, toggleUserStatusById } = useAuth();
+    const { user, setUser, userCero, setUserCero, deleteUserById, toggleUserStatusById } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchTermUserCero, setSearchTermUserCero] = useState('');
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
+    const handleSearchUserCero = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTermUserCero(event.target.value);
+    };
     const handleActivate = async (userID: number) => {
         try {
           await toggleUserStatusById(userID);
           console.log('User status toggled successfully');
+          
+          // Agregar el usuario activado a la lista de usuarios
+          const activatedUser = userCero?.find((u) => u.id === userID);
+          if (activatedUser) {
+            setUserCero((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
+            setUser((prevUsers) => [...(prevUsers || []), { ...activatedUser, estado: true }]);
+          }
         } catch (error) {
           console.error('Error toggling user status:', error);
         }
       };
-
-    const handleDelete = async (userID: number) => {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'No podrás revertir esto.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminarlo',
-            cancelButtonText: 'No, cancelar',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await deleteUserById(userID);
-                    Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
-                } catch (error) {
-                    Swal.fire('Error', 'Hubo un problema al eliminar el usuario.', 'error');
-                }
-            }
-        });
-    };
+    
+      const handleDelete = async (userID: number) => {
+        try {
+          await deleteUserById(userID);
+          // Remove user from user array and add it to userCero array
+          const deletedUser = user?.find((u) => u.id === userID);
+          if (deletedUser) {
+            setUser((prevUsers) => prevUsers?.filter((u) => u.id !== userID) || null);
+            setUserCero((prevUsers) => [...(prevUsers || []), { ...deletedUser, estado: false }]);
+          }
+          console.log('User deleted successfully');
+        } catch (error) {
+          console.error('Error deleting user:', error);
+        }
+      };
     return (
         <div>
         <div className="mb-8 rounded-lg bg-white p-6 shadow overflow-x-auto" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
@@ -100,8 +106,8 @@ const Table: React.FC = () => {
                 <h3 className="text-xl font-bold mb-4">Usuarios Suspendidos</h3>
                 <input
                     type="text"
-                    value={searchTerm}
-                    onChange={handleSearch}
+                    value={searchTermUserCero}
+                    onChange={handleSearchUserCero}
                     placeholder="Buscar negocio..."
                     className="mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 />
@@ -121,7 +127,7 @@ const Table: React.FC = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {userCero && userCero
-                            .filter(userData => userData.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
+                            .filter(userData => userData.nombre.toLowerCase().includes(searchTermUserCero.toLowerCase()))
                             .map((userData, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

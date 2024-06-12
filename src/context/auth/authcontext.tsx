@@ -33,7 +33,9 @@ interface UserCero extends User {}
 
 export interface AuthContextType {
   user: User[] | null;
+  setUser: React.Dispatch<React.SetStateAction<User[] | null>>;
   userCero: UserCero[] | null;
+  setUserCero: React.Dispatch<React.SetStateAction<UserCero[] | null>>;
   auth: Auth | null;
   authID: number | null; // Agregamos authID al contexto
   login: (email: string, password: string) => Promise<void>;
@@ -241,7 +243,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authID, auth, user, userCero, login, logout, fetchUserByID, deleteUserById, editAuthByID, changePassword, toggleUserStatusById }}>
+    <AuthContext.Provider value={{ authID, auth, user, setUser, userCero, setUserCero, login, logout, fetchUserByID, deleteUserById, editAuthByID, changePassword, toggleUserStatusById }}>
       {children}
     </AuthContext.Provider>
   );
