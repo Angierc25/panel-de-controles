@@ -45,7 +45,7 @@ const Password: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-8 rounded-lg bg-white p-6 shadow" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
+      <div className="mb-8 rounded-lg bg-white p-6 shadow ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
         <h2 className="mb-4 text-xl font-bold">Cambiar Contraseña</h2>
         <Card>
           <CardContent>

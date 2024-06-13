@@ -69,7 +69,7 @@ const Table: React.FC = () => {
   };
     return (
         <div>
-        <div className="mb-8 rounded-lg bg-white p-6 shadow overflow-x-auto" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
+        <div className="mb-8 rounded-lg bg-white p-6 shadow ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
             <div className="mt-8">
                 <h3 className="text-xl font-bold mb-4">Usuarios</h3>
                 <input
@@ -77,8 +77,9 @@ const Table: React.FC = () => {
                     value={searchTerm}
                     onChange={handleSearch}
                     placeholder="Buscar negocio..."
-                    className="mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="mb-4 px-2 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 />
+                <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
@@ -120,10 +121,11 @@ const Table: React.FC = () => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
         
-        <div className="mb-8 rounded-lg bg-white p-6 shadow overflow-x-auto" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
+        <div className="mb-8 rounded-lg bg-white p-6 shadow ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
             <div className="mt-8">
                 <h3 className="text-xl font-bold mb-4">Usuarios Suspendidos</h3>
                 <input
@@ -133,6 +135,7 @@ const Table: React.FC = () => {
                     placeholder="Buscar negocio..."
                     className="mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 />
+                <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
@@ -174,6 +177,7 @@ const Table: React.FC = () => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
         </div>

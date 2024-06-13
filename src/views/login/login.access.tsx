@@ -23,7 +23,7 @@ const Login: React.FC = () => {
           <LoginForm />
         </div>
       </div>
-      <div className="w-full md:w-1/2 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: `url(${Panel})` }}></div>
+      <div className="hidden md:block md:w-1/2 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: `url(${Panel})` }}></div>
     </div>
   );
 };

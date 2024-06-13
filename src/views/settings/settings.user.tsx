@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 const Settings: React.FC = () => {
     const navigate = useNavigate();
     return (
-        <div className="mb-8 rounded-lg bg-white p-6 shadow" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
+        <div className="mb-8 rounded-lg bg-white p-6 shadow w-full ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
             <h2 className="mb-4 text-xl font-bold">Configuracion</h2>
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-4">
                 <Card>
                     <AccountCircle className="text-blue-500 ml-4" fontSize="large" />
                     <CardHeader
@@ -18,7 +18,7 @@ const Settings: React.FC = () => {
                     <CardContent>
                         <div className="flex items-center justify-center">
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Administre su información personal y la configuración de su cuenta.
+                                Administre su información personal y la contraseña de su cuenta.
                             </p>
                         </div>
                         <div className="flex items-center justify-center">
@@ -38,7 +38,7 @@ const Settings: React.FC = () => {
                     <CardContent>
                         <div className="flex items-center">
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Administre su información personal y la configuración de su cuenta.
+                                Administre la configuración de su cuenta.
                             </p>
                         </div>
                         <div className="flex items-center justify-center">

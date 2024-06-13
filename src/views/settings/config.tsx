@@ -11,7 +11,7 @@ const LogoutCard: React.FC = () => {
   };
 
   return (
-    <div className="mb-8 rounded-lg bg-white p-6 shadow" style={{ maxWidth: 'calc(100% - 250px)', marginLeft: '250px' }}>
+    <div className="mb-8 rounded-lg bg-white p-6 shadow ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
       <CardHeader
         title={<Typography variant="h5" fontWeight="bold">Cerrar Sesion</Typography>}
         subheader={
