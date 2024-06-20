@@ -1,12 +1,5 @@
 import apiClient from "../config/apiclient";
 
-// Define una interfaz para los datos actualizados
-interface UpdatedAuthData {
-  nombre?: string;
-  email?: string;
-  telefono?: string;
-  pais?: string;
-}
 
 // Funciones de administrador
 
@@ -57,7 +50,7 @@ export const getAuth = async (token: string, authID: number) => {
  * @param updatedData - Los datos actualizados del usuario
  * @returns Los datos actualizados del usuario
  */
-export const editAuth = async (token: string, authID: number, updatedData: UpdatedAuthData) => {
+export const editAuth = async (token: string, authID: number, updatedData: any) => {
   const response = await apiClient.put(`/editar/${authID}`, updatedData, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -76,21 +69,35 @@ export const editAuth = async (token: string, authID: number, updatedData: Updat
  * @returns La respuesta de cambio de contraseña
  */
 export const changePassword = async (token: string, userId: number, contraseñaActual: string, nuevaContraseña: string, verificarContraseña: string) => {
-  const response = await apiClient.put(`/usuario/${userId}/cambiarPass`, {
-    contraseñaActual,
-    nuevaContraseña,
-    verificarContraseña,
-  }, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  
-  return response.data;
+  try {
+    const response = await apiClient.put(`/usuario/${userId}/cambiarPass`, {
+      contraseñaActual,
+      nuevaContraseña,
+      verificarContraseña,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Funciones para los usuarios que están en la aplicación
+
+/**
+ * Crear un nuevo usuario
+ * @param newUser - El objeto que contiene los datos del nuevo usuario
+ * @returns Los datos del usuario creado
+ */
+export const createUser = async (newUser: { nombre: string, email: string, telefono: string, password: string }) => {
+  const response = await apiClient.post('/registro', newUser);
+  return response.data;
+};
 
 /**
  * Obtener usuarios registrados en la aplicación
@@ -163,4 +170,18 @@ export const getUserCero = async (token: string) => {
     },
   });
   return response.data;
+};
+
+/**
+ * Obtener lista de paises
+ * @returns La lista de paises
+ */
+export const getCountryList = async () => {
+  try {
+    const response = await apiClient.get('/listaPaises'); // Reemplaza '/listaPaises' con tu endpoint real
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching country list:', error);
+    throw error;
+  }
 };
