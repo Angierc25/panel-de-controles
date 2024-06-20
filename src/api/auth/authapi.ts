@@ -1,5 +1,6 @@
 import apiClient from "../config/apiclient";
 
+
 // Funciones de administrador
 
 /**
@@ -169,4 +170,18 @@ export const getUserCero = async (token: string) => {
     },
   });
   return response.data;
+};
+
+/**
+ * Obtener lista de paises
+ * @returns La lista de paises
+ */
+export const getCountryList = async () => {
+  try {
+    const response = await apiClient.get('/listaPaises'); // Reemplaza '/listaPaises' con tu endpoint real
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching country list:', error);
+    throw error;
+  }
 };

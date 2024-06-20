@@ -71,16 +71,19 @@ const Table: React.FC = () => {
     return (
         <div>
         <div className="mb-8 rounded-lg bg-white p-6 shadow ml-16 sm:max-w-full sm:ml-0 md:ml-64 lg:ml-80 xl:ml-72">
-            <div className="mt-8">
-                <h3 className="text-xl font-bold mb-4">Usuarios</h3>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    placeholder="Buscar negocio..."
-                    className="mb-4 px-2 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                />
-                <NewUserForm/>
+        <div className="mt-8">
+                    <h3 className="text-xl font-bold mb-4">Usuarios</h3>
+                    <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            placeholder="Buscar negocio..."
+                            className="px-2 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mb-2 sm:mb-0 mr-2"
+                        />
+                        <NewUserForm />
+                    </div>
+
                 <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import useAuth from '../../../hooks/useAuth';
 
@@ -6,7 +6,7 @@ interface FormData {
     nombre: string;
     email: string;
     telefono: string;
-    pais: string;
+    pais: string; // Asegúrate de que pais esté tipado correctamente como string
     nombreNegocio: string;
     password: string;
 }
@@ -17,13 +17,17 @@ const NewUserForm: React.FC = () => {
         nombre: '',
         email: '',
         telefono: '',
-        pais: '',
+        pais: '', // Asegúrate de inicializar pais como string vacío
         nombreNegocio: '',
         password: '',
     });
-    const { createUser } = useAuth();
+    const { countries, fetchCountryList, createUser } = useAuth();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        fetchCountryList();
+    }, [fetchCountryList]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -33,23 +37,22 @@ const NewUserForm: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            await createUser(formData); // Llama a la función que envía los datos al servidor
 
-            // Muestra la alerta de éxito con SweetAlert
+        try {
+            await createUser(formData);
+
             Swal.fire({
                 icon: 'success',
                 title: 'Usuario creado exitosamente',
                 showConfirmButton: false,
-                timer: 2000, // Oculta automáticamente después de 2 segundos
+                timer: 2000,
             });
 
-            // Limpia el formulario y oculta el modal
             setFormData({
                 nombre: '',
                 email: '',
                 telefono: '',
-                pais: '',
+                pais: '', // Asegúrate de limpiar pais después de enviar el formulario
                 nombreNegocio: '',
                 password: '',
             });
@@ -57,7 +60,6 @@ const NewUserForm: React.FC = () => {
         } catch (error) {
             console.error('Error al crear el usuario:', error);
 
-            // Muestra la alerta de error con SweetAlert
             Swal.fire({
                 icon: 'error',
                 title: 'Error al crear usuario',
@@ -121,14 +123,20 @@ const NewUserForm: React.FC = () => {
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="pais" className="mb-1">País:</label>
-                                <input
-                                    type="text"
+                                <select
                                     id="pais"
                                     name="pais"
                                     value={formData.pais}
                                     onChange={handleChange}
                                     className="border border-gray-300 rounded px-3 py-2"
-                                />
+                                >
+                                    <option value="">Selecciona un país</option>
+                                    {countries && Array.isArray(countries) && countries.map((country, index) => (
+                                        <option key={index} value={country}>
+                                            {country}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="nombreNegocio" className="mb-1">Nombre del negocio:</label>
