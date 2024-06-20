@@ -10,7 +10,8 @@ import {
   getAuth as getAuthService,
   editAuth as editAuthService,
   changePassword as changePasswordService,
-  toggleUserStatus as toggleUserStatusService
+  toggleUserStatus as toggleUserStatusService,
+  createUser as createUserService,
 } from '../../api/auth/authapi';
 
 // Interfaces para los tipos de datos usados en el contexto
@@ -23,9 +24,12 @@ interface Auth {
   token: string;
 }
 
-interface User {
+export interface User {
   id: number;
   nombre: string;
+  email: string;
+  telefono: string;
+  pais: string;
   propietario: string;
   estado: boolean;
 }
@@ -47,6 +51,7 @@ export interface AuthContextType {
   editAuthByID: (updatedData: any) => Promise<void>;
   toggleUserStatusById: (userID: number) => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<void>;
+  createUser: (newUser: { nombre: string, email: string, telefono: string, password: string }) => Promise<void>;
 }
 
 // Creación del contexto
@@ -188,6 +193,20 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   // Funciones para los usuarios que están en la aplicación
 
   /**
+   * Función para crear un nuevo usuario
+   * @param newUser - El objeto que contiene los datos del nuevo usuario
+   */
+  const createUser = async (newUser: { nombre: string, email: string, telefono: string, password: string }) => {
+    try {
+      const createdUser = await createUserService(newUser);
+      console.log('User created:', createdUser);
+      setUser((prevUser) => (prevUser ? [...prevUser, createdUser] : [createdUser]));
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
+  };
+  /**
    * Función para obtener usuario por ID
    * @param userID - El ID del usuario
    */
@@ -306,7 +325,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         deleteUserById,
         editAuthByID,
         toggleUserStatusById,
-        changePassword
+        changePassword,
+        createUser,
       }}
     >
       {children}

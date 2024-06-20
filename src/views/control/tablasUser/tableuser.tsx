@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import { Delete, CheckCircle } from '@mui/icons-material';
+import NewUserForm from '../forms/formUser';
 
 const Table: React.FC = () => {
     const { user, setUser, userCero, setUserCero, deleteUserById, toggleUserStatusById } = useAuth();
@@ -79,6 +80,7 @@ const Table: React.FC = () => {
                     placeholder="Buscar negocio..."
                     className="mb-4 px-2 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 />
+                <NewUserForm/>
                 <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

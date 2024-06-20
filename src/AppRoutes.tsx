@@ -5,7 +5,8 @@ import PosList from './views/control/posList';
 import Login from './views/login/login.access';
 import Settings from './views/settings/settings.user';
 import Profile from './views/settings/profile';
-import Config from './views/settings/config'
+import Config from './views/settings/config';
+import NewUserForm from './views/control/forms/formUser';
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/settings" element={user ? <Settings /> : <Navigate to="/" replace />} />
       <Route path="/profile" element={user ? <Profile /> : <Navigate to="/" replace />} />
       <Route path="/config" element={user ? <Config /> : <Navigate to="/" replace />} />
+      <Route path="/newUser" element={user ? <NewUserForm /> : <Navigate to="/" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </>

@@ -89,6 +89,16 @@ export const changePassword = async (token: string, userId: number, contraseñaA
 // Funciones para los usuarios que están en la aplicación
 
 /**
+ * Crear un nuevo usuario
+ * @param newUser - El objeto que contiene los datos del nuevo usuario
+ * @returns Los datos del usuario creado
+ */
+export const createUser = async (newUser: { nombre: string, email: string, telefono: string, password: string }) => {
+  const response = await apiClient.post('/registro', newUser);
+  return response.data;
+};
+
+/**
  * Obtener usuarios registrados en la aplicación
  * @param token - El token de autenticación
  * @returns La lista de usuarios registrados
